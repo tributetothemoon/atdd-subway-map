@@ -1,6 +1,7 @@
 package wooteco.subway.dao;
 
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -29,10 +30,9 @@ public class LineDao implements LineRepository {
     public Line save(Line line) {
         String query = "INSERT INTO LINE (name, color) VALUES (:name, :color)";
 
-        SqlParameterSource sqlParameterSource = new MapSqlParameterSourceBuilder()
-                .setParam("name", line.getName())
-                .setParam("color", line.getColor())
-                .build();
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
+                .addValue("name", line.getName())
+                .addValue("color", line.getColor());
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -51,9 +51,8 @@ public class LineDao implements LineRepository {
     public Line findById(Long id) {
         String query = "SELECT * FROM LINE WHERE id = :id";
 
-        SqlParameterSource sqlParameterSource = new MapSqlParameterSourceBuilder()
-                .setParam("id", id)
-                .build();
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
+                .addValue("id", id);
 
         return jdbcTemplate.queryForObject(query, sqlParameterSource, lineRowMapper);
     }
@@ -62,9 +61,8 @@ public class LineDao implements LineRepository {
     public Optional<Line> findByName(String name) {
         String query = "SELECT * FROM LINE WHERE name = :name";
 
-        SqlParameterSource sqlParameterSource = new MapSqlParameterSourceBuilder()
-                .setParam("name", name)
-                .build();
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
+                .addValue("name", name);
 
         return this.jdbcTemplate.query(query, sqlParameterSource, (rs) -> {
             if (rs.next()) {
@@ -82,11 +80,10 @@ public class LineDao implements LineRepository {
     public Line update(Long id, Line newLine) {
         String query = "UPDATE LINE SET name = :name, color = :color WHERE id = :id";
 
-        SqlParameterSource sqlParameterSource = new MapSqlParameterSourceBuilder()
-                .setParam("name", newLine.getName())
-                .setParam("color", newLine.getColor())
-                .setParam("id", id)
-                .build();
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
+                .addValue("name", newLine.getName())
+                .addValue("color", newLine.getColor())
+                .addValue("id", id);
 
         this.jdbcTemplate.update(query, sqlParameterSource);
         return this.findById(id);
@@ -96,9 +93,8 @@ public class LineDao implements LineRepository {
     public void delete(Long id) {
         String query = "DELETE FROM LINE WHERE id = :id";
 
-        SqlParameterSource sqlParameterSource = new MapSqlParameterSourceBuilder()
-                .setParam("id", id)
-                .build();
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
+                .addValue("id", id);
 
         jdbcTemplate.update(query, sqlParameterSource);
     }

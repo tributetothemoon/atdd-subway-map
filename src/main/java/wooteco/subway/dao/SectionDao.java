@@ -31,12 +31,11 @@ public class SectionDao implements SectionRepository {
     public Section save(long lineId, Section section) {
         String query = "INSERT INTO SECTION (line_id, up_station_id, down_station_id, distance) VALUES (:lineId, :upStationId, :downStationId, :distance)";
 
-        SqlParameterSource sqlParameterSource = new MapSqlParameterSourceBuilder()
-                .setParam("lineId", lineId)
-                .setParam("upStationId", section.getUpStation().getId())
-                .setParam("downStationId", section.getDownStation().getId())
-                .setParam("distance", section.getDistance())
-                .build();
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
+                .addValue("lineId", lineId)
+                .addValue("upStationId", section.getUpStation().getId())
+                .addValue("downStationId", section.getDownStation().getId())
+                .addValue("distance", section.getDistance());
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -50,12 +49,11 @@ public class SectionDao implements SectionRepository {
         String query = "INSERT INTO SECTION (line_id, up_station_id, down_station_id, distance) VALUES (:lineId, :upStationId, :downStationId, :distance)";
 
         SqlParameterSource[] sqlParameterSources = sections.stream()
-                .map(section -> new MapSqlParameterSourceBuilder()
-                        .setParam("lineId", lineId)
-                        .setParam("upStationId", section.getUpStation().getId())
-                        .setParam("downStationId", section.getDownStation().getId())
-                        .setParam("distance", section.getDistance())
-                        .build())
+                .map(section -> new MapSqlParameterSource()
+                        .addValue("lineId", lineId)
+                        .addValue("upStationId", section.getUpStation().getId())
+                        .addValue("downStationId", section.getDownStation().getId())
+                        .addValue("distance", section.getDistance()))
                 .toArray(MapSqlParameterSource[]::new);
 
         this.jdbcTemplate.batchUpdate(query, sqlParameterSources);
@@ -65,9 +63,8 @@ public class SectionDao implements SectionRepository {
     public void deleteSectionsByLineId(long lineId) {
         String query = "DELETE FROM SECTION WHERE line_id = :lineId";
 
-        SqlParameterSource sqlParameterSource = new MapSqlParameterSourceBuilder()
-                .setParam("lineId", lineId)
-                .build();
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
+                .addValue("lineId", lineId);
 
         this.jdbcTemplate.update(query, sqlParameterSource);
     }
@@ -75,9 +72,8 @@ public class SectionDao implements SectionRepository {
     @Override
     public Section findById(long sectionId) {
         String query = "SELECT * FROM SECTION WHERE id = :id";
-        SqlParameterSource sqlParameterSource = new MapSqlParameterSourceBuilder()
-                .setParam("id", sectionId)
-                .build();
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
+                .addValue("id", sectionId);
 
         return jdbcTemplate.queryForObject(query, sqlParameterSource, sectionRowMapper);
     }
@@ -86,9 +82,8 @@ public class SectionDao implements SectionRepository {
     public List<Section> findAllByLineId(long lineId) {
         String query = "SELECT * FROM SECTION WHERE line_id = :lineId";
 
-        SqlParameterSource sqlParameterSource = new MapSqlParameterSourceBuilder()
-                .setParam("lineId", lineId)
-                .build();
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
+                .addValue("lineId", lineId);
 
         return jdbcTemplate.query(query, sqlParameterSource, sectionRowMapper);
     }
@@ -97,9 +92,8 @@ public class SectionDao implements SectionRepository {
     public Long getUpStationIdById(long id) {
         String query = "SELECT up_station_id FROM SECTION WHERE id = :id";
 
-        SqlParameterSource sqlParameterSource = new MapSqlParameterSourceBuilder()
-                .setParam("id", id)
-                .build();
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
+                .addValue("id", id);
 
         return jdbcTemplate.queryForObject(query, sqlParameterSource, Long.class);
     }
@@ -108,9 +102,8 @@ public class SectionDao implements SectionRepository {
     public Long getDownStationIdById(long id) {
         String query = "SELECT down_station_id FROM SECTION WHERE id = :id";
 
-        SqlParameterSource sqlParameterSource = new MapSqlParameterSourceBuilder()
-                .setParam("id", id)
-                .build();
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
+                .addValue("id", id);
 
         return jdbcTemplate.queryForObject(query, sqlParameterSource, Long.class);
     }

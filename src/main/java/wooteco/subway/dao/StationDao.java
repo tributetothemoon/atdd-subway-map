@@ -1,6 +1,7 @@
 package wooteco.subway.dao;
 
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -29,9 +30,8 @@ public class StationDao implements StationRepository {
     public Station save(Station station) {
         String query = "INSERT INTO STATION (name) VALUES (:name)";
 
-        SqlParameterSource sqlParameterSource = new MapSqlParameterSourceBuilder()
-                .setParam("name", station.getName())
-                .build();
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
+                .addValue("name", station.getName());
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -44,9 +44,8 @@ public class StationDao implements StationRepository {
     public Station findById(long id) {
         String query = "SELECT * FROM STATION WHERE id = :id";
 
-        SqlParameterSource sqlParameterSource = new MapSqlParameterSourceBuilder()
-                .setParam("id", id)
-                .build();
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
+                .addValue("id", id);
 
         return this.jdbcTemplate.queryForObject(query, sqlParameterSource, stationRowMapper);
     }
@@ -61,9 +60,8 @@ public class StationDao implements StationRepository {
     public Optional<Station> findByName(String name) {
         String query = "SELECT * FROM STATION WHERE name = :name";
 
-        SqlParameterSource sqlParameterSource = new MapSqlParameterSourceBuilder()
-                .setParam("name", name)
-                .build();
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
+                .addValue("name", name);
 
         return this.jdbcTemplate.query(query, sqlParameterSource, (rs) -> {
             if (rs.next()) {
@@ -79,9 +77,8 @@ public class StationDao implements StationRepository {
     public void delete(Long id) {
         String query = "DELETE FROM STATION WHERE id = :id";
 
-        SqlParameterSource sqlParameterSource = new MapSqlParameterSourceBuilder()
-                .setParam("id", id)
-                .build();
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
+                .addValue("id", id);
 
         jdbcTemplate.update(query, sqlParameterSource);
     }
