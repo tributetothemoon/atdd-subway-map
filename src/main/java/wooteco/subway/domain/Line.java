@@ -61,17 +61,17 @@ public class Line {
         private String name;
         private String color;
 
-        public LineBuilder setId(Long id) {
+        public LineBuilder id(Long id) {
             this.id = id;
             return this;
         }
 
-        public LineBuilder setName(String name) {
+        public LineBuilder name(String name) {
             this.name = name;
             return this;
         }
 
-        public LineBuilder setColor(String color) {
+        public LineBuilder color(String color) {
             this.color = color;
             return this;
         }

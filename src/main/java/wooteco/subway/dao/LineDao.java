@@ -20,9 +20,9 @@ public class LineDao implements LineRepository {
     }
 
     private final RowMapper<Line> lineRowMapper = (rs, rn) -> Line.builder()
-                .setId(rs.getLong("id"))
-                .setName(rs.getString("name"))
-                .setColor(rs.getString("color"))
+                .id(rs.getLong("id"))
+                .name(rs.getString("name"))
+                .color(rs.getString("color"))
                 .build();
 
     @Override
@@ -69,9 +69,9 @@ public class LineDao implements LineRepository {
         return this.jdbcTemplate.query(query, sqlParameterSource, (rs) -> {
             if (rs.next()) {
                 return Optional.of(Line.builder()
-                        .setId(rs.getLong("id"))
-                        .setName(rs.getString("name"))
-                        .setColor(rs.getString("color"))
+                        .id(rs.getLong("id"))
+                        .name(rs.getString("name"))
+                        .color(rs.getString("color"))
                         .build());
             }
             return Optional.empty();
